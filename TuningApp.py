@@ -95,7 +95,10 @@ list_of_index = []
 for f in os.listdir(os.path.expanduser("~")):
     if picam2.global_camera_info()[0]["Model"] in f:
         if "_" in f:
-            list_of_index.append(int(f[f.rindex("_") + 1:]))
+            try:  # in case of e.g. "imx708_wide" where we don't have a number after the "_"
+                list_of_index.append(int(f[f.rindex("_") + 1:]))
+            except Exception:
+                pass
         index_photo += 1
 if index_photo == 0:
     folder_directory = os.path.join(os.path.expanduser("~"), picam2.global_camera_info()[0]["Model"])
