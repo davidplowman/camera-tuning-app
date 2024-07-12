@@ -188,10 +188,7 @@ class MacbethWindow(QWidget):
         self.window.resize(1200, 600)
         self.window.setLayout(self.layout_h)
 
-        self._timer = QTimer()
-        self._timer.setInterval(20)
-        self._timer.timeout.connect(self.on_button_clicked)
-        self._timer.start()
+        QTimer.singleShot(0, self.request_frame)
         picam2.start()
 
         self.count = 0
@@ -199,7 +196,7 @@ class MacbethWindow(QWidget):
         # to make the green macbeth frame more stabile, we remove it when not dettected for 10 periods
         self.macbeth_glitch = 0
 
-    def on_button_clicked(self):
+    def request_frame(self):
         if not busy:
             picam2.capture_array(signal_function=self.qpicamera2.signal_done)
 
@@ -247,6 +244,8 @@ class MacbethWindow(QWidget):
                         pass
                 else:
                     self.macbeth_glitch += 1
+
+        QTimer.singleShot(1, self.request_frame)
 
 
 # Create an app that asks for file directory, with the suggested name
